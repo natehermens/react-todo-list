@@ -1,30 +1,24 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 
-class App extends Component {
-  state = {
-    list: []
-  };
+function App() {
+  const [list, setList] = useState([]);
 
-  handleUpdate = indx => {
-    this.setState({
-      list: this.state.list.filter((item, index) => index !== indx)
-    });
-  };
-
-  handleSubmit = value => {
-    this.setState({ list: [...this.state.list, value] });
-  };
-
-  render() {
-    return (
-      <div className="app">
-        <TodoForm submit={this.handleSubmit} />
-        <TodoList update={this.handleUpdate} list={this.state.list} />
-      </div>
-    );
+  function handleUpdate(indx) {
+    setList(list.filter((item, index) => index !== indx));
   }
+
+  function handleSubmit(value) {
+    setList([...list, value]);
+  }
+
+  return (
+    <div className="app">
+      <TodoForm submit={handleSubmit} />
+      <TodoList update={handleUpdate} list={list} />
+    </div>
+  );
 }
 
 export default App;

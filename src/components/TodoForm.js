@@ -1,61 +1,53 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-class TodoForm extends Component {
-  state = {
-    value: '',
-    focused: false,
-    default: 'new todo'
-  };
+function TodoForm({ submit }) {
+  const defaultValue = 'new todo';
+  const [value, setValue] = useState(defaultValue);
+  const [focused, setFocused] = useState(false);
 
-  componentWillMount() {
-    this.setState({ value: this.state.default });
+  function handleChange(event) {
+    setValue(event.target.value);
   }
 
-  handleChange = event => {
-    this.setState({ value: event.target.value });
-  };
-
-  handleSubmit = event => {
-    if (this.state.value.length > 0) {
-      this.props.submit(this.state.value);
+  function handleSubmit(event) {
+    if (value.length > 0) {
+      submit(value);
     }
-    if (!this.state.focused) {
-      this.setState({ value: this.state.default });
+    if (!focused) {
+      setValue(defaultValue);
     } else {
-      this.setState({ value: '' });
+      setValue('');
     }
     event.preventDefault();
-  };
-
-  handleOnFocus = () => {
-    this.setState({ focused: true });
-    if (this.state.value === this.state.default) {
-      this.setState({ value: '' });
-    }
-  };
-
-  handleOnBlur = () => {
-    this.setState({ focused: false });
-    if (this.state.value === '') {
-      this.setState({ value: this.state.default });
-    }
-  };
-
-  render() {
-    return (
-      <form className="todoForm" onSubmit={this.handleSubmit}>
-        <input className="formButton" type="submit" value="Add" />
-        <input
-          className="todoInput"
-          onFocus={this.handleOnFocus}
-          onBlur={this.handleOnBlur}
-          type="text"
-          value={this.state.value}
-          onChange={this.handleChange}
-        />
-      </form>
-    );
   }
+
+  function handleOnFocus() {
+    setFocused(true);
+    if (value === defaultValue) {
+      setValue('');
+    }
+  }
+
+  function handleOnBlur() {
+    setFocused(false);
+    if (value === '') {
+      setValue(defaultValue);
+    }
+  }
+
+  return (
+    <form className="todoForm" onSubmit={handleSubmit}>
+      <input className="formButton" type="submit" value="Add" />
+      <input
+        className="todoInput"
+        onFocus={handleOnFocus}
+        onBlur={handleOnBlur}
+        type="text"
+        value={value}
+        onChange={handleChange}
+      />
+    </form>
+  );
 }
 
 export default TodoForm;
